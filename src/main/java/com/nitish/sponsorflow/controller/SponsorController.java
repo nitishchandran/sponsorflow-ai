@@ -1,5 +1,6 @@
 package com.nitish.sponsorflow.controller;
 
+import com.nitish.sponsorflow.dto.DashboardStatsResponse;
 import com.nitish.sponsorflow.entity.Sponsor;
 import com.nitish.sponsorflow.entity.SponsorStatus;
 import com.nitish.sponsorflow.service.SponsorService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sponsors")
@@ -67,5 +69,39 @@ public class SponsorController {
 
         return sponsorService
                 .getSponsorsPaginated(page, size);
+    }
+    @PutMapping("/{id}")
+    public Sponsor updateSponsor(
+            @PathVariable Long id,
+            @RequestBody Sponsor sponsor) {
+
+        return sponsorService
+                .updateSponsor(id, sponsor);
+    }
+    @GetMapping("/dashboard/count")
+    public long getTotalSponsorCount() {
+
+        return sponsorService
+                .getTotalSponsorCount();
+
+    }
+    @GetMapping("/dashboard/count/{status}")
+    public long getSponsorCountByStatus(
+            @PathVariable SponsorStatus status) {
+
+        return sponsorService
+                .getSponsorCountByStatus(status);
+    }
+    @GetMapping("/dashboard/stats")
+    public DashboardStatsResponse getDashboardStats() {
+
+        return sponsorService
+                .getDashboardStats();
+    }
+    @GetMapping("/dashboard/industry-count")
+    public Map<String, Long> getIndustryCounts() {
+
+        return sponsorService
+                .getIndustryCounts();
     }
 }
