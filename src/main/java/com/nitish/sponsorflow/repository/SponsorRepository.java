@@ -12,4 +12,5 @@ public interface SponsorRepository extends JpaRepository<Sponsor,Long> {
     List<Sponsor> findByCompanyName(String companyName);
     List<Sponsor> findByStatus(SponsorStatus status);
     List<Sponsor> findByIndustry(String industry);
+    List<Sponsor> findByCompanyNameContainingIgnoreCase(String companyName);
 }

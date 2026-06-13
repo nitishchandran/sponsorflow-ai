@@ -34,8 +34,14 @@ public class Sponsor {
     @Enumerated(EnumType.STRING)
     private SponsorStatus status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
     }
+    @PreUpdate
+    public void preUpdate(){
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }

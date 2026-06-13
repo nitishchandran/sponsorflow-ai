@@ -1,9 +1,11 @@
 package com.nitish.sponsorflow.service;
 
 import com.nitish.sponsorflow.dto.DashboardStatsResponse;
+import com.nitish.sponsorflow.dto.SponsorResponse;
 import com.nitish.sponsorflow.entity.Sponsor;
 import com.nitish.sponsorflow.entity.SponsorStatus;
 import com.nitish.sponsorflow.exception.SponsorNotFoundException;
+import com.nitish.sponsorflow.mapper.SponsorMapper;
 import com.nitish.sponsorflow.repository.SponsorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,11 +23,15 @@ public class SponsorService {
     @Autowired
     private SponsorRepository sponsorRepository;
 
+    @Autowired
+    private SponsorMapper sponsorMapper;
+
     public Sponsor createSponsor(Sponsor sponsor){
 
         return sponsorRepository.save(sponsor);
     }
     public List<Sponsor> getAllSponsors() {
+
         return sponsorRepository.findAll();
     }
     public Sponsor getSponsorById(Long id) {
@@ -33,6 +39,15 @@ public class SponsorService {
                 .orElseThrow(() ->
                         new SponsorNotFoundException(
                                 "Sponsor not found with id: " + id));
+    }
+    public SponsorResponse getSponsorResponseById(Long id) {
+
+        Sponsor sponsor = sponsorRepository.findById(id)
+                .orElseThrow(() ->
+                        new SponsorNotFoundException(
+                                "Sponsor not found with id: " + id));
+
+        return sponsorMapper.toResponse(sponsor);
     }
     public void deleteSponsor(Long id){
         sponsorRepository.deleteById(id);
@@ -158,7 +173,55 @@ public class SponsorService {
                     ) + 1
             );
         }
-
         return industryCounts;
+    }
+    public List<Sponsor> searchByCompanyNameContains(
+            String companyName) {
+
+        return sponsorRepository
+                .findByCompanyNameContainingIgnoreCase(
+                        companyName);
+    }
+    public Map<String, Long> getPipelineStats() {
+
+        Map<String, Long> pipelineStats =
+                new HashMap<>();
+
+        for (SponsorStatus status :
+                SponsorStatus.values()) {
+
+            long count =
+                    getSponsorCountByStatus(status);
+
+            pipelineStats.put(
+                    status.name(),
+                    count
+            );
+        }
+
+        return pipelineStats;
+    }
+    public List<Sponsor> searchSponsors(
+            String company,
+            SponsorStatus status,
+            String industry) {
+
+        if (company != null) {
+            return sponsorRepository
+                    .findByCompanyNameContainingIgnoreCase(
+                            company);
+        }
+
+        if (status != null) {
+            return sponsorRepository
+                    .findByStatus(status);
+        }
+
+        if (industry != null) {
+            return sponsorRepository
+                    .findByIndustry(industry);
+        }
+
+        return sponsorRepository.findAll();
     }
 }

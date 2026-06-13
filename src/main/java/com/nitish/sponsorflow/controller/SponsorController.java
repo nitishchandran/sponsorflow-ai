@@ -1,6 +1,7 @@
 package com.nitish.sponsorflow.controller;
 
 import com.nitish.sponsorflow.dto.DashboardStatsResponse;
+import com.nitish.sponsorflow.dto.SponsorResponse;
 import com.nitish.sponsorflow.entity.Sponsor;
 import com.nitish.sponsorflow.entity.SponsorStatus;
 import com.nitish.sponsorflow.service.SponsorService;
@@ -27,8 +28,8 @@ public class SponsorController {
         return sponsorService.getAllSponsors();
     }
     @GetMapping("/{id}")
-    public Sponsor getSponsorById(@PathVariable Long id) {
-        return sponsorService.getSponsorById(id);
+    public SponsorResponse getSponsorById(@PathVariable Long id) {
+        return sponsorService.getSponsorResponseById(id);
     }
     @DeleteMapping("/{id}")
     public void deleteSponsor(@PathVariable Long id) {
@@ -103,5 +104,36 @@ public class SponsorController {
 
         return sponsorService
                 .getIndustryCounts();
+    }
+    @GetMapping("/search/company/contains/{companyName}")
+    public List<Sponsor> searchByCompanyNameContains(
+            @PathVariable String companyName) {
+
+        return sponsorService
+                .searchByCompanyNameContains(
+                        companyName);
+    }
+    @GetMapping("/dashboard/pipeline")
+    public Map<String, Long> getPipelineStats() {
+
+        return sponsorService
+                .getPipelineStats();
+    }
+    @GetMapping("/search")
+    public List<Sponsor> searchSponsors(
+
+            @RequestParam(required = false)
+            String company,
+
+            @RequestParam(required = false)
+            SponsorStatus status,
+
+            @RequestParam(required = false)
+            String industry) {
+
+        return sponsorService.searchSponsors(
+                company,
+                status,
+                industry);
     }
 }
