@@ -712,7 +712,6 @@ function App() {
                   <p>{activity.description}</p>
 
                   <small>{activity.sponsorCompanyName}</small>
-           
                 </div>
               </div>
             ))}
@@ -1200,7 +1199,7 @@ function App() {
                         <button
                           type="button"
                           className="delete-button"
-                          onClick={() => handleDelete(sponsor.id)}
+                          onClick={() => handleDelete(sponsor)}
                         >
                           Delete
                         </button>
