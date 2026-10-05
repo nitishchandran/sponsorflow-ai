@@ -168,6 +168,8 @@ function App() {
         ...currentActivities,
       ]);
 
+      await fetchUpcomingFollowUps();
+
       setNewActivity({
         type: "CALL",
         description: "",
