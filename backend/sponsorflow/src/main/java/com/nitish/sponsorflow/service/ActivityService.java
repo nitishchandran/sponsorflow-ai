@@ -10,11 +10,13 @@ import com.nitish.sponsorflow.mapper.ActivityMapper;
 import com.nitish.sponsorflow.repository.ActivityRepository;
 import com.nitish.sponsorflow.repository.SponsorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
