@@ -283,14 +283,23 @@ function App() {
 
     setFormLoading(true);
     setError("");
-
+    let savedSponsor;
     try {
       if (editingSponsor) {
-        // UPDATE existing sponsor
-        await sponsorService.updateSponsor(editingSponsor.id, newSponsor);
+        savedSponsor = await sponsorService.updateSponsor(
+          editingSponsor.id,
+          newSponsor,
+        );
+
+        setSponsors((currentSponsors) =>
+          currentSponsors.map((sponsor) =>
+            sponsor.id === savedSponsor.id ? savedSponsor : sponsor,
+          ),
+        );
       } else {
-        // CREATE new sponsor
-        await sponsorService.createSponsor(newSponsor);
+        savedSponsor = await sponsorService.createSponsor(newSponsor);
+
+        setSponsors((currentSponsors) => [savedSponsor, ...currentSponsors]);
       }
 
       // Reset form
