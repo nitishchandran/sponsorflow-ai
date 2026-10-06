@@ -121,3 +121,8 @@ Development & Delivery
    Backend   Frontend
     Tests      Build
 ```
+## 📸 Screenshots
+
+### Dashboard
+
+![SponsorFlowAI Dashboard](screenshots/dashboard.png)
