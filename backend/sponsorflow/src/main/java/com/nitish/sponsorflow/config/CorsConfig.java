@@ -21,7 +21,12 @@ public class CorsConfig {
                         .allowedOrigins(
                                 "http://localhost:5173",
                                 "https://sponsorflow-ai.vercel.app")
-                        .allowedMethods("*");
+                        .allowedMethods(
+                                "GET",
+                                "POST",
+                                "PUT",
+                                "DELETE",
+                                "OPTIONS");
             }
         };
     }
