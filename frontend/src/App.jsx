@@ -516,6 +516,60 @@ function App() {
       title: "Lost",
     },
   ];
+  const handleTouchStart = (sponsor) => {
+  setDraggedSponsor(sponsor);
+};
+
+const handleTouchEnd = (event) => {
+  if (!draggedSponsor) {
+    return;
+  }
+
+  const touch = event.changedTouches[0];
+
+  const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+  const column = element?.closest(".kanban-column");
+
+  if (!column) {
+    setDraggedSponsor(null);
+    return;
+  }
+
+  const targetStatus = column.dataset.status;
+
+  if (!targetStatus || draggedSponsor.status === targetStatus) {
+    setDraggedSponsor(null);
+    return;
+  }
+
+  const updateSponsorStatus = async () => {
+    try {
+      const updatedSponsor = {
+        companyName: draggedSponsor.companyName,
+        contactPerson: draggedSponsor.contactPerson,
+        designation: draggedSponsor.designation,
+        email: draggedSponsor.email,
+        phone: draggedSponsor.phone,
+        industry: draggedSponsor.industry,
+        notes: draggedSponsor.notes,
+        status: targetStatus,
+      };
+
+      await sponsorService.updateSponsor(draggedSponsor.id, updatedSponsor);
+
+      setDraggedSponsor(null);
+      await refreshDashboard();
+    } catch (err) {
+      console.error("Failed to update sponsor status:", err);
+
+      setError("Failed to update sponsor status.");
+      setDraggedSponsor(null);
+    }
+  };
+
+  updateSponsorStatus();
+};
 
   const formatFollowUpDate = (date) => {
     return new Date(date).toLocaleDateString("en-GB", {
@@ -747,6 +801,7 @@ function App() {
               <div
                 className="kanban-column"
                 key={column.status}
+                data-status={column.status}
                 onDragOver={(event) => event.preventDefault()}
                 onDrop={async () => {
                   if (!draggedSponsor) {
@@ -800,6 +855,9 @@ function App() {
                       key={sponsor.id}
                       draggable={true}
                       onDragStart={() => setDraggedSponsor(sponsor)}
+                      onTouchStart={() => handleTouchStart(sponsor)}
+                      onTouchEnd={handleTouchEnd}
+                      style={{ touchAction: "none" }}
                     >
                       <h4>{sponsor.companyName}</h4>
 
